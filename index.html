@@ -4,54 +4,88 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script type="text/javascript">
-  function display(){
+    function display(){
 
-    var search = 106;
-    var v= document.vinform.district.value;  
-    var url="https://covid-spring-api.herokuapp.com/api/userdistrict?district="+v; 
+      var search = 106;
+      var v= document.vinform.district.value;  
+      var url="https://covid-spring-api.herokuapp.com/api/userdistrict?district="+v; 
 
-    makeRequest(url,function(data){
+      makeRequest(url,function(data){
 
-      var HTML = "<table class='table table-condensed table-bordered'>";
+        var HTML = "<table class='table table-condensed table-bordered'>";
 
-      HTML += "<tr><th>District</th><th>Active Cases</th><th>Confirmed</th><th>Recovered</th><th>Deceased</th></tr>";
+        HTML += "<tr><th>District</th><th>Active Cases</th><th>Confirmed</th><th>Recovered</th><th>Deceased</th></tr>";
 
-      var data = JSON.parse(data.responseText);
-      
-      HTML += "<tr><td>" + v + "</td><td>" + data.active + "</td><td>" + data.confirmed + "</td><td>" + data.recovered + "</td><td>" + data.deceased + "</td></tr>";
-      
+        var data = JSON.parse(data.responseText);
 
-      HTML += "</table>";
+        HTML += "<tr><td>" + v + "</td><td>" + data.active + "</td><td>" + data.confirmed + "</td><td>" + data.recovered + "</td><td>" + data.deceased + "</td></tr>";
+        
+        HTML += "</table>";
 
-      document.getElementById('myTable').innerHTML = HTML;
+        document.getElementById('myTable').innerHTML = HTML;
 
-    });
-  }
+        if(data.confirmed!=0){
+          var chart_data = [data.active, data.confirmed, data.recovered, data.deceased];
+          drawChart(chart_data);
+        }
 
-  function makeRequest(url, callback) {
-    var request;
-    
-
-    if (window.XMLHttpRequest) {
-      request = new XMLHttpRequest(); // IE7+, Firefox, Chrome, Opera, Safari
-    } else {
-      request = new ActiveXObject("Microsoft.XMLHTTP"); // IE6, IE5
+      });
     }
 
-    request.onreadystatechange = function() {
-      if (request.readyState == 4 && request.status == 200) {
-        callback(request);
+    function makeRequest(url, callback) {
+      var request;
+      
+      if (window.XMLHttpRequest) {
+        request = new XMLHttpRequest(); // IE7+, Firefox, Chrome, Opera, Safari
+      } else {
+        request = new ActiveXObject("Microsoft.XMLHTTP"); // IE6, IE5
       }
+
+      request.onreadystatechange = function() {
+        if (request.readyState == 4 && request.status == 200) {
+          callback(request);
+        }
+      }
+
+      request.open("GET", url, true);
+      request.send();
     }
 
-    request.open("GET", url, true);
-    request.send();
-  }
+    //draw bar graph
+    function drawChart(data){
+      new Chart(document.getElementById("bar-chart"), {
+          type: 'bar',
+          data: {
+            labels: ["Active", "Confirmed", "Recovered", "Deceased"],
+            datasets: [
+              {
+                label: "Population ",
+                backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9"],
+                data: data
+              }
+            ]
+          },
+          options: {
+            responsive: false,
+            legend: { display: false },
+            title: {
+              display: true,
+              text: 'Cases Chart'
+            }
+          }
+      });
+    }
+
   </script>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  
 </head>
 <body>
 
-  <marquee><h1><b>COVID-19 STATS</b></h1></marquee>  
+  <header style="padding-bottom:20px">
+    <marquee><h1><b>Karnataka State COVID-19 STATS</b></h1></marquee> 
+  </header> 
 
   
   <div class="container" style="padding-top: 20px;">
@@ -63,6 +97,39 @@
   </div>
 
   
-    <div id="myTable" class= "container" style="padding-left:30px padding-right:30px;"></div>
+    <div id="myTable" class= "container" style="padding-left:30px padding-right:30px padding-top:30px;"></div>
+
+
+    <section>
+          <div class="container" style="padding-top: 20px;">
+            <canvas id="bar-chart" width="600" height="400"></canvas>
+          </div>
+    </section>
+    
+
+
+    <section style="padding-bottom: 20px;">
+      <div class="container card border-primary mb-3" style="padding-top:20px;">
+        <h3>COVID-19 Helpline Numbers In Karnataka</h3>
+        <p>
+          Coronavirus Queries: National Helpline Number – 1075 / 1800-112-545 / +91-11-2397-8046
+        </p>
+
+        <ul>
+          <li>COVID-19 Karnataka Helpline Number (including quarantine violations): 104 / +91-80-4684-8600/6669-2000</li>
+          <li>For farmers: +91-80-2221-2818 / 0237. Timing 8 am to 8 pm</li>
+          <li>Food Helpline: 155-214</li>
+        </ul>
+
+        <p>More at: <a href="https://www.karnataka.com/govt/covid-19-helpline-numbers-in-karnataka/">Karnataka Govt.</a></p>
+      </div>
+    </section>
+    
+
+    <footer style="background:black;">
+      <div class="container">
+        <p class="text-center">By AKD</p>
+      </div>
+    </footer>
 </body>
 </html>
