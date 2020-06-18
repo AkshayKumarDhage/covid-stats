@@ -1,0 +1,68 @@
+
+<html>
+<head>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script type="text/javascript">
+  function display(){
+
+    var search = 106;
+    var v= document.vinform.district.value;  
+    var url="https://covid-spring-api.herokuapp.com/api/userdistrict?district="+v; 
+
+    makeRequest(url,function(data){
+
+      var HTML = "<table class='table table-condensed table-bordered'>";
+
+      HTML += "<tr><th>District</th><th>Active Cases</th><th>Confirmed</th><th>Recovered</th><th>Deceased</th></tr>";
+
+      var data = JSON.parse(data.responseText);
+      
+      HTML += "<tr><td>" + v + "</td><td>" + data.active + "</td><td>" + data.confirmed + "</td><td>" + data.recovered + "</td><td>" + data.deceased + "</td></tr>";
+      
+
+      HTML += "</table>";
+
+      document.getElementById('myTable').innerHTML = HTML;
+
+    });
+  }
+
+  function makeRequest(url, callback) {
+    var request;
+    
+
+    if (window.XMLHttpRequest) {
+      request = new XMLHttpRequest(); // IE7+, Firefox, Chrome, Opera, Safari
+    } else {
+      request = new ActiveXObject("Microsoft.XMLHTTP"); // IE6, IE5
+    }
+
+    request.onreadystatechange = function() {
+      if (request.readyState == 4 && request.status == 200) {
+        callback(request);
+      }
+    }
+
+    request.open("GET", url, true);
+    request.send();
+  }
+  </script>
+</head>
+<body>
+
+  <marquee><h1><b>COVID-19 STATS</b></h1></marquee>  
+
+  
+  <div class="container" style="padding-top: 20px;">
+    <form name="vinform"> 
+    <label>Enter District:</label>
+    <input type="text" name="district" required/>  
+    <input type="button" class="btn btn-primary" value="ShowTable" onClick="display()" />  
+    </form>
+  </div>
+
+  
+    <div id="myTable" class= "container" style="padding-left:30px padding-right:30px;"></div>
+</body>
+</html>
