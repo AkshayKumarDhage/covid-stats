@@ -3,6 +3,6 @@
 
 Live@ : https://covid2k19-stats.herokuapp.com/
 
-<img src=""></img>
+<img src="https://github.com/AkshayKumarDhage/covid-stats/blob/master/covidApp.jpg"></img>
 
 [![HitCount](http://hits.dwyl.com/AkshayKumarDhage/covid-stats.svg)](http://hits.dwyl.com/AkshayKumarDhage/covid-stats)
